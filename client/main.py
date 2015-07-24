@@ -5,7 +5,7 @@ __author__ = 'pgenssler'
 
 
 def get(path):
-    connection = http.client.HTTPConnection('localhost', port=8000)
+    connection = http.client.HTTPConnection('localhost', port=11197)
     headers = {'Content-type': 'text/plain'}
     connection.request('GET', path, '', headers)
     rsp = connection.getresponse()
@@ -13,7 +13,7 @@ def get(path):
     return rsp.readall().decode('utf-8')
 
 def post(path, data):
-    connection = http.client.HTTPConnection('localhost', port=8000)
+    connection = http.client.HTTPConnection('localhost', port=11197)
     headers = {'Content-type': 'text/plain'}
     connection.request('POST', path, data, headers)
     rsp = connection.getresponse()

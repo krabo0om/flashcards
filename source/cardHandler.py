@@ -36,6 +36,7 @@ class CardHandler(object):
             self.current_set = self.sets[0]
         min_v = 999999
         card = None
+        print("i'll choose from {0} cards".format(len(self.current_set.cards)))
         for c in self.current_set.cards:
             if int(c.l_index) < min_v:
                 card = c
@@ -55,5 +56,5 @@ class CardHandler(object):
     def change_set(self, set_name):
         for s in self.sets:
             if s.name == set_name:
-                self.current_set = self.sets[set_name]
+                self.current_set = s
         return self.current_set.name

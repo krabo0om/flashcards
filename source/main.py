@@ -1,6 +1,5 @@
 
-import http.server
-from card import Card
+import sys
 from cardHandler import CardHandler
 from config import Config
 from httpRequestHandler import myHandler
@@ -18,8 +17,14 @@ def start_server(card_handler, config):
         server.socket.close()
 
 if __name__ == '__main__':
-    cfg = Config('config.json')
+    if len(sys.argv) != 2:
+        print('usage: {0} <path to config>'.format(sys.argv[0]))
+        exit(1)
+
+    cfg_path = sys.argv[1]
+    cfg = Config(cfg_path)
     c = CardHandler(cfg)
     c.load()
+    print("loaded {0} sets".format(len(c.sets)))	
     start_server(c, cfg)
-    cfg.save('config.json')
+    cfg.save(cfg_path)
