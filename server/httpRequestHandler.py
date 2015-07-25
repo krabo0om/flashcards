@@ -46,6 +46,11 @@ class myHandler(BaseHTTPRequestHandler):
             cs = self.server.cardhandler.change_set(data)
             self.wfile_write(cs)
 
+        elif path == 'ncard':
+            self.send_complete_header('text/plain')
+            new_id = self.server.cardhandler.create_card(data)
+            self.wfile_write(new_id)
+
     def wfile_write(self, text, encoding='utf-8'):
         self.wfile.write(text.encode(encoding))
 

@@ -1,39 +1,28 @@
-import http.client
-import json
+import sys
+
+from fc_common.client_api import FlashcardsClientAPI
 
 __author__ = 'pgenssler'
 
-
-def get(path):
-    connection = http.client.HTTPConnection('localhost', port=11197)
-    headers = {'Content-type': 'text/plain'}
-    connection.request('GET', path, '', headers)
-    rsp = connection.getresponse()
-    connection.close()
-    return rsp.readall().decode('utf-8')
-
-def post(path, data):
-    connection = http.client.HTTPConnection('localhost', port=11197)
-    headers = {'Content-type': 'text/plain'}
-    connection.request('POST', path, data, headers)
-    rsp = connection.getresponse()
-    connection.close()
-    return rsp.readall().decode('utf-8')
-
 if __name__ == '__main__':
-    # set a set
-    sets = get('gsets')
-    ui = input('select a set: ' + sets + '\n')
-    print('current set: ' + post('sset', ui))
-    card = json.loads(get('nxtc'))
-    ui = input('answer: ' + card['question'] + ' ')
-    lvl = 0
-    if ui == card['answer']:
-        lvl = input('correct, level: ')
-    else:
-        print("fail. correct: " + card['answer'] + "\nlevel increase: 0")
+    if len(sys.argv) != 3:
+        print('usage: {0} <host> <port>'.format(sys.argv[0]))
+        exit(1)
 
-    cid = card['id']
-    data = '{"id":"%s", "level": "%s"}' % (cid, str(lvl))
-    lvl = post('learned', data)
-    print('new level: ' + lvl)
+    host = sys.argv[1]
+    port = sys.argv[2]
+
+    api = FlashcardsClientAPI(host, port)
+
+    sets = api.get_all_sets()
+    ui = input('select a set: ' + ', '.join(sets) + '\n')
+    print('current set: ' + api.set_set(ui))
+    card = api.get_next_card()
+    ui = input('answer: ' + card.question + '\n')
+    lvl = 0
+    if ui == card.answer:
+        lvl = input('correct, level: ')
+        lvl = api.answer(card.id, lvl)
+        print('new level: ' + str(lvl))
+    else:
+        print("fail. correct: " + card.answer + "\nlevel increase: 0")

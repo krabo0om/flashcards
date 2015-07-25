@@ -13,3 +13,6 @@ the server (found under source) handles simple **push** and **get** requests mad
 3. **post** on path "/learned" with a json answer ("id" and "*level*")
 4. the server will return the new level
 5. **get** the next question
+
+
+Used [Page](http://page.sourceforge.net/) by Don Rozenberg for initial GUI design for the manager. 
