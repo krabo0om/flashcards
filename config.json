@@ -1,4 +1,4 @@
 {
-    "PATH_CARDS": "/home/pgenssler/lernkarten/cards/",
+    "PATH_CARDS": "cards/",
     "port": 8000
 }
