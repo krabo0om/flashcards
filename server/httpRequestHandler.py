@@ -70,4 +70,5 @@ class myHandler(BaseHTTPRequestHandler):
         self.wfile_write('<li>get current set as string: get on path gset</li>')
         self.wfile_write('<li>get all sets as comma string: get on path gsets</li>')
         self.wfile_write('<li>change current set: post on path sset with name of set</li>')
+        self.wfile_write('<li>create a new card at ncard: {"set": .., "question": .., "hint": .., "answer": ..}</li>')
         self.wfile_write('</ul></p></body></html>')
