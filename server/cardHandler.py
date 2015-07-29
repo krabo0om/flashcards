@@ -1,6 +1,6 @@
 import json
 import os
-from card import Card
+from fc_common.card import Card
 
 __author__ = 'pgenssler'
 

@@ -8,6 +8,7 @@ class myHandler(BaseHTTPRequestHandler):
     def do_HEAD(self):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
 
     def do_GET(self):
@@ -57,6 +58,7 @@ class myHandler(BaseHTTPRequestHandler):
     def send_complete_header(self, res_type):
         self.send_response(200)
         self.send_header('Content-type', res_type)
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
 
     def print_api(self):
