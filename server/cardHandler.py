@@ -1,5 +1,6 @@
+import json
 import os
-from card import Card
+from fc_common.card import Card
 
 __author__ = 'pgenssler'
 
@@ -36,15 +37,14 @@ class CardHandler(object):
             self.current_set = self.sets[0]
         min_v = 999999
         card = None
-        print("i'll choose from {0} cards".format(len(self.current_set.cards)))
         for c in self.current_set.cards:
             if int(c.l_index) < min_v:
                 card = c
                 min_v = int(c.l_index)
         return card
 
-    """ needs either card or cid (the card id) """
     def learned(self, level, card=None, cid=None):
+        """ needs either card or cid (the card id) """
         if card is None:
             for c in self.current_set.cards:
                 if c.id == cid:
@@ -58,3 +58,33 @@ class CardHandler(object):
             if s.name == set_name:
                 self.current_set = s
         return self.current_set.name
+
+    def create_card(self, data):
+        data = json.loads(data)
+        card = Card()
+        card.set = data['set']
+        card.question = data['question']
+        card.hint = data['hint']
+        card.answer = data['answer']
+
+        d_set = self.__find_set(card.set)
+        if d_set is None:
+            d_set = CardSet(card.set)
+            self.sets.append(d_set)
+        max_id = 0
+        for c in d_set.cards:
+            if int(c.id) >= int(max_id):
+                max_id = int(c.id) + 1
+        card.id = str(max_id)
+        card.save(self.config)
+        d_set.cards.append(card)
+        return card.id
+
+    def __find_set(self, set_name):
+        """
+        @rtype: CardSet
+        """
+        for s in self.sets:
+            if s.name == set_name:
+                return s
+        return None

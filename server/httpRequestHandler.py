@@ -8,6 +8,7 @@ class myHandler(BaseHTTPRequestHandler):
     def do_HEAD(self):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
 
     def do_GET(self):
@@ -46,12 +47,18 @@ class myHandler(BaseHTTPRequestHandler):
             cs = self.server.cardhandler.change_set(data)
             self.wfile_write(cs)
 
+        elif path == 'ncard':
+            self.send_complete_header('text/plain')
+            new_id = self.server.cardhandler.create_card(data)
+            self.wfile_write(new_id)
+
     def wfile_write(self, text, encoding='utf-8'):
         self.wfile.write(text.encode(encoding))
 
     def send_complete_header(self, res_type):
         self.send_response(200)
         self.send_header('Content-type', res_type)
+        self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
 
     def print_api(self):
@@ -65,4 +72,5 @@ class myHandler(BaseHTTPRequestHandler):
         self.wfile_write('<li>get current set as string: get on path gset</li>')
         self.wfile_write('<li>get all sets as comma string: get on path gsets</li>')
         self.wfile_write('<li>change current set: post on path sset with name of set</li>')
+        self.wfile_write('<li>create a new card at ncard: {"set": .., "question": .., "hint": .., "answer": ..}</li>')
         self.wfile_write('</ul></p></body></html>')

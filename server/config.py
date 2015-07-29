@@ -6,7 +6,7 @@ __author__ = 'pgenssler'
 class Config(object):
     def __init__(self, path=None):
         if path is None or not os.path.isfile(path):
-            self.PATH_CARDS = '/home/pgenssler/lernkarten/cards/'
+            self.PATH_CARDS = 'cards/'
             self.port = 8000
         else:
             self.load(path)
