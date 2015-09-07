@@ -1,6 +1,7 @@
 import json
+import random
 import os
-from fc_common.card import Card
+from card  import Card
 
 __author__ = 'pgenssler'
 
@@ -36,12 +37,15 @@ class CardHandler(object):
         if self.current_set is None:
             self.current_set = self.sets[0]
         min_v = 999999
-        card = None
+        cards = []
         for c in self.current_set.cards:
+            if int(c.l_index) == min_v:
+                cards.append(c)
             if int(c.l_index) < min_v:
-                card = c
+                cards = []
+                cards.append(c)
                 min_v = int(c.l_index)
-        return card
+        return random.choice(cards)
 
     def learned(self, level, card=None, cid=None):
         """ needs either card or cid (the card id) """

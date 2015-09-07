@@ -4,8 +4,8 @@
 # In conjunction with Tcl version 8.6
 #    Jul 25, 2015 04:14:43 PM
 import sys
-from source import gui_support
-
+from gui_support import all
+ 
 try:
     from Tkinter import *
 except ImportError:

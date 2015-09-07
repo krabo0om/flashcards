@@ -1,6 +1,6 @@
 import sys
 from client_api import FlashcardsClientAPI
-from source.gui_main import vp_start_gui
+from gui_main import vp_start_gui
 
 __author__ = 'pgenssler'
 
