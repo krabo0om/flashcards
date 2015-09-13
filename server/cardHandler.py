@@ -23,6 +23,8 @@ class CardHandler(object):
         self.config = config
         self.box = []
         self.__init_box()
+        self.current_card = None  # the current question is taken out of the box. if there is no answer
+        # and the next question is asked, the first one vanishes
 
     def load(self):
         self.sets = []
@@ -34,6 +36,7 @@ class CardHandler(object):
                 c_abs = os.path.join(self.config.PATH_CARDS, s, c)
                 card = Card(c_abs)
                 card_set.cards.append(card)
+            print('loaded set {0} with {1} cards'.format(card_set.name, len(card_set.cards)))
         if len(self.sets) > 0:
             self.change_set(self.sets[0].name)
 
@@ -42,11 +45,14 @@ class CardHandler(object):
             return None
         if self.current_set is None:
             self.change_set(self.sets[0].name)
+        if self.current_card is not None:
+            self.box[int(self.current_card.l_index) % 6].append(self.current_card)  # mod 6 because of compatibility
 
         for l in self.box:
             if len(l) > 0:
-                c_index = random.randrange(len(l))
-                return l.pop(c_index)
+                c = l.pop()
+                self.current_card = c
+                return c
         return None
 
     def learned(self, level, card=None, cid=None):
@@ -55,9 +61,18 @@ class CardHandler(object):
             for c in self.current_set.cards:
                 if c.id == cid:
                     card = c
-        card.l_index = str(int(card.l_index) + int(level))
+                    break
+        card.l_index = str(level)
         card.save(self.config)
-        self.box[int(level)].append(card)
+        if int(level) == 0:
+            self.box[0].insert(random.randrange(4, 7), card)  # put it back into pocket 0
+        else:
+            if len(self.box[int(level)]) == 0:
+                self.box[int(level)].append(card)
+            else:
+                self.box[int(level)].insert(random.randrange(0, len(self.box[int(level)])),
+                                            card)  # random into pocket x
+        self.current_card = None
         return card.l_index
 
     def change_set(self, set_name):
@@ -67,9 +82,12 @@ class CardHandler(object):
             self.__init_box()  # clear box
             for s in self.sets:
                 if s.name == set_name:
+                    self.current_card = None
                     self.current_set = s  # set current card set
                     for c in self.current_set.cards:
-                        self.box[0].append(c)  # place all cards in pocket 0
+                        self.box[int(c.l_index) % 6].append(c)  # place all cards in their pocket
+                    for b in self.box:
+                        random.shuffle(b)  # shuffle the cards in the boxes
                     return self.current_set.name
             return set_name + ' not found'
         else:
@@ -106,6 +124,6 @@ class CardHandler(object):
         return None
 
     def __init_box(self):
-        self.box.clear()
+        self.box = []
         for i in range(6):
             self.box.append([])
