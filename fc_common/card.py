@@ -17,9 +17,12 @@ class Card(object):
 
     def _load(self, path):
         if os.path.isfile(path):
-            f = open(path, 'r')
-            data = json.load(f)
-            self.__dict__.update(data)
+            try:
+                f = open(path, 'r')
+                data = json.load(f)
+                self.__dict__.update(data)
+            except:
+                print('error loading card: ' + path )
 
     def learn(self, stage):
         self.l_index = str(stage + int(self.l_index))
