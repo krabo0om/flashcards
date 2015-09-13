@@ -32,3 +32,6 @@ class Card(object):
 
         with open(path, "w") as f:
             f.write(json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=4))
+
+    def __str__(self):
+        return self.question
