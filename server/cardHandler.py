@@ -50,7 +50,7 @@ class CardHandler(object):
 
         for l in self.box:
             if len(l) > 0:
-                c = l.pop()
+                c = l.pop(0)
                 self.current_card = c
                 return c
         return None
@@ -65,7 +65,7 @@ class CardHandler(object):
         card.l_index = str(level)
         card.save(self.config)
         if int(level) == 0:
-            self.box[0].insert(random.randrange(4, 7), card)  # put it back into pocket 0
+            self.box[0].insert(random.randrange(2, 4), card)  # put it back into pocket 0
         else:
             if len(self.box[int(level)]) == 0:
                 self.box[int(level)].append(card)
