@@ -75,8 +75,14 @@ class CardHandler(object):
         self.current_card = None
         return card.l_index
 
-    def change_set(self, set_name):
-        if self.current_set is not None and self.current_set.name == set_name:
+    def reset_set(self):
+        for card in self.current_set.cards:
+            card.l_index = '0'
+            card.save(self.config)
+        self.change_set(self.current_set.name, force=True)
+
+    def change_set(self, set_name, force=False):
+        if not force and self.current_set is not None and self.current_set.name == set_name:
             return set_name
         if len(self.sets) > 0:
             self.__init_box()  # clear box

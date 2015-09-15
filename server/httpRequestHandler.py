@@ -26,6 +26,10 @@ class myHandler(BaseHTTPRequestHandler):
             self.send_complete_header('text/plain')
             formatted = '%s' % (','.join(str(it) for it in self.server.cardhandler.sets))
             self.wfile_write(formatted)
+        elif path == 'resetset':
+            self.send_complete_header('text/plain')
+            self.server.cardhandler.reset_set()
+            self.wfile_write(str('reseted set ' + self.server.cardhandler.current_set.name))
 
     def do_POST(self):
         path = self.path.replace('/', '', 1)
@@ -69,6 +73,7 @@ class myHandler(BaseHTTPRequestHandler):
         self.wfile_write(
             '<li>post result for a card id: post on path learned with json { "id":"card_id", "level": increase"},'
             'returns the new level</li>')
+        self.wfile_write('<li>reset the levels of all cards in the current set to 0 with path resetset')
         self.wfile_write('<li>get current set as string: get on path gset</li>')
         self.wfile_write('<li>get all sets as comma string: get on path gsets</li>')
         self.wfile_write('<li>change current set: post on path sset with name of set</li>')
