@@ -1,5 +1,6 @@
 import http.client
 import json
+
 from card import Card
 
 __author__ = 'pgenssler'
@@ -12,6 +13,8 @@ class FlashcardsClientAPI(object):
     PATH_ALL_SETS = 'gsets'
     PATH_LEARNED = 'learned'
     PATH_NEW_CARD = 'ncard'
+    PATH_RESET_SET = 'resetset'
+    PATH_STATISTIC = 'statistics'
 
     def __init__(self, host, port):
         """
@@ -114,3 +117,21 @@ class FlashcardsClientAPI(object):
         data = json.dumps({'set': set_name, 'question': question, 'hint': hint, 'answer': answer})
         return self._post(self.PATH_NEW_CARD, data)
 
+    def reset_set(self, set_name):
+        """
+        resets the current set to learn level 0
+        @param set_name: the name of the set to be reset
+        @return: returns the success/fail message
+        @rtype: str
+        """
+        return self._post(self.PATH_RESET_SET, set_name)
+
+    def get_statistics(self, set_name):
+        """
+        gets the statistic data for a set
+        @param set_name: the name of the set to get the data for
+        @return: returns a comma separated list with the number of cards in that level
+        @rtype: list of str
+        """
+        data = self._post(self.PATH_STATISTIC, set_name)
+        return data.split(',')

@@ -75,29 +75,37 @@ class CardHandler(object):
         self.current_card = None
         return card.l_index
 
-    def reset_set(self):
-        for card in self.current_set.cards:
+    def reset_set(self, set_name):
+        cset = self.__find_set(set_name)
+        if cset is None:
+            return 'set not found'
+        for card in cset.cards:
             card.l_index = '0'
             card.save(self.config)
-        self.change_set(self.current_set.name, force=True)
+        if cset.name == self.current_set.name:
+            self.recreate_box()
+        return 'set {0} reset'.format(cset.name)
 
-    def change_set(self, set_name, force=False):
-        if not force and self.current_set is not None and self.current_set.name == set_name:
+    def change_set(self, set_name):
+        if self.current_set is not None and self.current_set.name == set_name:
             return set_name
         if len(self.sets) > 0:
-            self.__init_box()  # clear box
             for s in self.sets:
                 if s.name == set_name:
                     self.current_card = None
                     self.current_set = s  # set current card set
-                    for c in self.current_set.cards:
-                        self.box[int(c.l_index) % 6].append(c)  # place all cards in their pocket
-                    for b in self.box:
-                        random.shuffle(b)  # shuffle the cards in the boxes
+                    self.recreate_box()
                     return self.current_set.name
             return set_name + ' not found'
         else:
             return 'no sets loaded'
+
+    def recreate_box(self):
+        self.__init_box()  # clear box
+        for c in self.current_set.cards:
+            self.box[int(c.l_index) % 6].append(c)  # place all cards in their pocket
+        for b in self.box:
+            random.shuffle(b)  # shuffle the cards in the boxes
 
     def create_card(self, data):
         data = json.loads(data)
@@ -119,6 +127,17 @@ class CardHandler(object):
         card.save(self.config)
         d_set.cards.append(card)
         return card.id
+
+    def statistics(self, set_name):
+        scores = []
+        for i in range(6):
+            scores.append(0)
+        cards = self.__find_set(set_name).cards
+        if cards is None:
+            return scores
+        for c in cards:
+            scores[int(c.l_index)] += 1
+        return ','.join(str(i) for i in scores)
 
     def __find_set(self, set_name):
         """

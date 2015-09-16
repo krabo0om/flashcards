@@ -26,10 +26,6 @@ class myHandler(BaseHTTPRequestHandler):
             self.send_complete_header('text/plain')
             formatted = '%s' % (','.join(str(it) for it in self.server.cardhandler.sets))
             self.wfile_write(formatted)
-        elif path == 'resetset':
-            self.send_complete_header('text/plain')
-            self.server.cardhandler.reset_set()
-            self.wfile_write(str('reseted set ' + self.server.cardhandler.current_set.name))
 
     def do_POST(self):
         path = self.path.replace('/', '', 1)
@@ -56,6 +52,15 @@ class myHandler(BaseHTTPRequestHandler):
             new_id = self.server.cardhandler.create_card(data)
             self.wfile_write(new_id)
 
+        elif path == 'statistics':
+            self.send_complete_header('text/plain')
+            stat = self.server.cardhandler.statistics(data)
+            self.wfile_write(str(stat))
+
+        elif path == 'resetset':
+            self.send_complete_header('text/plain')
+            self.wfile_write(self.server.cardhandler.reset_set(data))
+
     def wfile_write(self, text, encoding='utf-8'):
         self.wfile.write(text.encode(encoding))
 
@@ -78,4 +83,5 @@ class myHandler(BaseHTTPRequestHandler):
         self.wfile_write('<li>get all sets as comma string: get on path gsets</li>')
         self.wfile_write('<li>change current set: post on path sset with name of set</li>')
         self.wfile_write('<li>create a new card at ncard: {"set": .., "question": .., "hint": .., "answer": ..}</li>')
+        self.wfile_write('<li>get statistics for a given level: post on statistics with set name')
         self.wfile_write('</ul></p></body></html>')
