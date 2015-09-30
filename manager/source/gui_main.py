@@ -94,7 +94,7 @@ class Flashcards_Manager:
         self.Label3.configure(text='''Question''')
 
         self.Label4 = Label(master)
-        self.Label4.place(relx=0.35, rely=0.51, height=19, width=29)
+        self.Label4.place(relx=0.35, rely=0.87, height=19, width=29)
         self.Label4.configure(text='''Hint''')
 
         self.edit_set = Entry(master)
@@ -112,14 +112,8 @@ class Flashcards_Manager:
         self.txt_question.configure(wrap=WORD)
         self.txt_question.bind("<Tab>", focus_next_window)
 
-        self.edit_hint = Entry(master)
-        self.edit_hint.place(relx=0.35, rely=0.55, relheight=0.05, relwidth=0.27)
-        self.edit_hint.configure(background="white")
-        self.edit_hint.configure(font=font11)
-        self.edit_hint.configure(textvariable=gui_support.edit_hint_var)
-
         self.txt_answer = Text(master)
-        self.txt_answer.place(relx=0.35, rely=0.67, relheight=0.31, relwidth=0.63)
+        self.txt_answer.place(relx=0.35, rely=0.55, relheight=0.31, relwidth=0.63)
         self.txt_answer.configure(background="white")
         self.txt_answer.configure(font=font10)
         self.txt_answer.configure(selectbackground="#c4c4c4")
@@ -127,8 +121,14 @@ class Flashcards_Manager:
         self.txt_answer.configure(wrap=WORD)
         self.txt_answer.bind("<Tab>", focus_next_window)
 
+        self.edit_hint = Entry(master)
+        self.edit_hint.place(relx=0.35, rely=0.92, relheight=0.05, relwidth=0.27)
+        self.edit_hint.configure(background="white")
+        self.edit_hint.configure(font=font11)
+        self.edit_hint.configure(textvariable=gui_support.edit_hint_var)
+
         self.Label5 = Label(master)
-        self.Label5.place(relx=0.35, rely=0.62, height=19, width=48)
+        self.Label5.place(relx=0.35, rely=0.5, height=19, width=48)
         self.Label5.configure(text='''Answer''')
 
         self.btn_commit = Button(master)
@@ -136,4 +136,5 @@ class Flashcards_Manager:
         self.btn_commit.configure(activebackground="#d9d9d9")
         self.btn_commit.configure(text='''commit''')
         self.btn_commit.configure(width=167)
-        self.btn_commit.bind('<Button-1>', lambda e: gui_support.commit(e))
+        self.btn_commit.bind('<Button-1>',lambda e:gui_support.commit(e))
+        self.btn_commit.bind('<Enter>', lambda e: gui_support.commit(e))
