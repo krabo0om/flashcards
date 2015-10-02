@@ -33,7 +33,8 @@ def set_Tk_var():
     global edit_hint_var
     edit_hint_var = StringVar()
 
-def list_sel_update(arg):
+
+def list_sel_update():
     edit_set_var.set(w.list_set.get(w.list_set.curselection()))
 
 def update_list():
@@ -41,7 +42,7 @@ def update_list():
     list_set_var.set(' '.join(sets))
     cur = api.get_current_set()
     w.list_set.selection_set(sets.index(cur))
-    list_sel_update(None)
+    list_sel_update()
 
 def txt_read(txt):
     return txt.get("1.0", END)
@@ -50,13 +51,16 @@ def txt_clr(txt):
     txt.delete("1.0", END)
 
 def commit(p1):
-    api.create_card(edit_set_var.get(), txt_read(w.txt_question), edit_hint_var.get(), txt_read(w.txt_answer))
+    v_set = edit_set_var.get()
+    v_qst = txt_read(w.txt_question)
+    v_hint = edit_hint_var.get()
+    v_ans = txt_read(w.txt_answer)
     edit_set_var.set('')
     edit_hint_var.set('')
     txt_clr(w.txt_question)
     txt_clr(w.txt_answer)
+    api.create_card(v_set, v_qst, v_hint, v_ans)
     update_list()
-
 
 def init(top, gui, arg=None):
     global w, top_level, root

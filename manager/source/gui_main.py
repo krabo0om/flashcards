@@ -136,5 +136,6 @@ class Flashcards_Manager:
         self.btn_commit.configure(activebackground="#d9d9d9")
         self.btn_commit.configure(text='''commit''')
         self.btn_commit.configure(width=167)
-        self.btn_commit.bind('<Button-1>',lambda e:gui_support.commit(e))
-        self.btn_commit.bind('<Enter>', lambda e: gui_support.commit(e))
+        self.btn_commit.bind('<Button-1>', lambda e: gui_support.commit(e))
+        self.btn_commit.bind('<Return>', lambda e: gui_support.commit(e))
+        self.btn_commit.bind('<KP_Enter>', lambda e: gui_support.commit(e))
